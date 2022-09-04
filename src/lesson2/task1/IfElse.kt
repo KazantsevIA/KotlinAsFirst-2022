@@ -2,7 +2,11 @@
 
 package lesson2.task1
 
+//import com.sun.org.apache.xpath.internal.operations.Bool
 import lesson1.task1.discriminant
+import lesson1.task1.seconds
+import lesson1.task1.thirdDigit
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -68,7 +72,18 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    return when {
+        age in 11..14 -> "$age лет"
+        age in 111..114 -> "$age лет"
+        age % 10 == 1 -> "$age год"
+        age % 10 == 2 -> "$age года"
+        age % 10 == 3 -> "$age года"
+        age % 10 == 4 -> "$age года"
+        else -> "$age лет"
+    }
+
+}
 
 /**
  * Простая (2 балла)
@@ -81,7 +96,22 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+    val halfWay: Double = (v1 * t1 + v2 * t2 + v3 * t3) / 2
+    return when {
+        v1 * t1 >= halfWay -> {
+            if (v1 * t1 == halfWay) t1
+            else (halfWay / v1)
+        }
+        v1 * t1 + v2 * t2 >= halfWay -> {
+            if (v1 * t1 + v2 * t2 == halfWay) (t1 + t1)
+            else (t1 + (halfWay - (v1 * t1)) / v2)
+        }
+        else -> {
+            (t1 + t2 + (halfWay - (v1 * t1 + v2 * t2)) / v3 )
+        }
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -96,7 +126,17 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int = TODO()
+): Int {
+    var danger1: Boolean = ((rookX1 == kingX) || (rookY1 == kingY))
+    var danger2: Boolean = ((rookX2 == kingX) || (rookY2 == kingY))
+
+    return when{
+        danger1 && danger2 -> 3
+        danger1 -> 1
+        danger2 -> 2
+        else -> 0
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -112,7 +152,19 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int {
+    var danger1: Boolean = ((rookX == kingX) || (rookY == kingY))
+    var danger2: Boolean = (abs(bishopX - kingX) == abs(bishopY - kingY))
+
+    return when {
+        danger1 && danger2 -> 3
+        danger1 -> 1
+        danger2 -> 2
+        else -> 0
+    }
+
+
+}
 
 /**
  * Простая (2 балла)
@@ -122,7 +174,9 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    TODO()
+}
 
 /**
  * Средняя (3 балла)
@@ -133,3 +187,4 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+
