@@ -68,6 +68,7 @@ fun main() {
 fun seconds(hours: Int, minutes: Int, seconds: Int): Int =
     hours * 3600 + minutes * 60 + seconds
 
+
 /**
  * Тривиальная (1 балл)
  *
@@ -136,3 +137,20 @@ fun accountInThreeYears(initial: Int, percent: Int): Double =
  */
 fun numberRevert(number: Int): Int =
     (number % 10) * 100 + ((number % 100) / 10) * 10 + number / 100
+
+
+fun main(args: Array<String>) {
+
+    val resultSeconds = seconds(3,5,29)
+    println("3:5:29 = $resultSeconds")
+    val resultSeconds1 = seconds(24,0,0)
+    println("24:0:0 = $resultSeconds1")
+
+    val resultThirdDigit = thirdDigit(1234567)
+    println("3rd 1234567 - $resultThirdDigit")
+    val resultThirdDigit1 = thirdDigit(100200)
+    println("3rd 000200 - $resultThirdDigit1")
+    val resultThirdDigit2 = thirdDigit(1000)
+    println("3rd 1000 - $resultThirdDigit2")
+
+}
