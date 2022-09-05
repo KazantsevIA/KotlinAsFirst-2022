@@ -5,6 +5,7 @@ package lesson2.task1
 //import com.sun.org.apache.xpath.internal.operations.Bool
 import lesson1.task1.discriminant
 import lesson1.task1.seconds
+import lesson1.task1.sqr
 import lesson1.task1.thirdDigit
 import kotlin.math.abs
 import kotlin.math.max
@@ -175,7 +176,16 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    TODO()
+    val maxEdge = maxOf(a, b, c)
+    val minEdge = minOf(a, b, c)
+    val midEdge = (a + b + c) - (maxEdge + minEdge)
+    val cos = (sqr(midEdge) + sqr(minEdge) - sqr(maxEdge)) / (2 * midEdge * minEdge)
+    return when {
+        (cos > 0) && (cos < 1) -> 0
+        cos == 0.0 -> 1
+        (cos < 0) && (cos > -1) -> 2
+        else -> -1
+    }
 }
 
 /**
@@ -186,5 +196,15 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    return when {
+        c in a..b && d in a..b -> d - c
+        c in a..b -> b - c
+        d in a..b -> d - a
+        a in c..d && b in c..d -> b - a
+        a in c..d -> d - a
+        b in c..d -> b - c
+        else -> -1
+    }
+}
 
