@@ -104,12 +104,14 @@ fun timeForHalfWay(
             if (v1 * t1 == halfWay) t1
             else (halfWay / v1)
         }
+
         v1 * t1 + v2 * t2 >= halfWay -> {
-            if (v1 * t1 + v2 * t2 == halfWay) (t1 + t1)
+            if (v1 * t1 + v2 * t2 == halfWay) (t1 + t2)
             else (t1 + (halfWay - (v1 * t1)) / v2)
         }
+
         else -> {
-            (t1 + t2 + (halfWay - (v1 * t1 + v2 * t2)) / v3 )
+            (t1 + t2 + (halfWay - (v1 * t1 + v2 * t2)) / v3)
         }
     }
 }
@@ -128,10 +130,10 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    var danger1: Boolean = ((rookX1 == kingX) || (rookY1 == kingY))
-    var danger2: Boolean = ((rookX2 == kingX) || (rookY2 == kingY))
+    val danger1: Boolean = ((rookX1 == kingX) || (rookY1 == kingY))
+    val danger2: Boolean = ((rookX2 == kingX) || (rookY2 == kingY))
 
-    return when{
+    return when {
         danger1 && danger2 -> 3
         danger1 -> 1
         danger2 -> 2
@@ -154,8 +156,8 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    var danger1: Boolean = ((rookX == kingX) || (rookY == kingY))
-    var danger2: Boolean = (abs(bishopX - kingX) == abs(bishopY - kingY))
+    val danger1: Boolean = ((rookX == kingX) || (rookY == kingY))
+    val danger2: Boolean = (abs(bishopX - kingX) == abs(bishopY - kingY))
 
     return when {
         danger1 && danger2 -> 3
