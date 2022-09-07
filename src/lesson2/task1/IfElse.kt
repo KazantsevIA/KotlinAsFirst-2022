@@ -2,7 +2,6 @@
 
 package lesson2.task1
 
-//import com.sun.org.apache.xpath.internal.operations.Bool
 import lesson1.task1.discriminant
 import lesson1.task1.seconds
 import lesson1.task1.sqr
@@ -73,8 +72,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String {
-    return when {
+fun ageDescription(age: Int): String =
+    when {
         age in 11..14 -> "$age лет"
         age in 111..114 -> "$age лет"
         age % 10 == 1 -> "$age год"
@@ -84,7 +83,6 @@ fun ageDescription(age: Int): String {
         else -> "$age лет"
     }
 
-}
 
 /**
  * Простая (2 балла)
@@ -98,7 +96,7 @@ fun timeForHalfWay(
     t2: Double, v2: Double,
     t3: Double, v3: Double
 ): Double {
-    val halfWay: Double = (v1 * t1 + v2 * t2 + v3 * t3) / 2
+    val halfWay = (v1 * t1 + v2 * t2 + v3 * t3) / 2
     return when {
         v1 * t1 >= halfWay -> {
             if (v1 * t1 == halfWay) t1
@@ -130,8 +128,8 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val danger1: Boolean = ((rookX1 == kingX) || (rookY1 == kingY))
-    val danger2: Boolean = ((rookX2 == kingX) || (rookY2 == kingY))
+    val danger1 = (rookX1 == kingX || rookY1 == kingY)
+    val danger2 = (rookX2 == kingX || rookY2 == kingY)
 
     return when {
         danger1 && danger2 -> 3
@@ -156,8 +154,8 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    val danger1: Boolean = ((rookX == kingX) || (rookY == kingY))
-    val danger2: Boolean = (abs(bishopX - kingX) == abs(bishopY - kingY))
+    val danger1 = ((rookX == kingX) || (rookY == kingY))
+    val danger2 = (abs(bishopX - kingX) == abs(bishopY - kingY))
 
     return when {
         danger1 && danger2 -> 3
