@@ -97,8 +97,21 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    if (n < 3) return 1
-    return fib(n - 1) + fib(n - 2)
+    var num1 = 1
+    var num2 = 1
+    var flag = true
+    for (i in 3..n) {
+        if (flag) {
+            num1 += num2
+            flag = false
+        } else {
+            num2 += num1
+            flag = true
+        }
+    }
+    return maxOf(num1, num2)
+    //if (n < 3) return 1
+    //return fib(n - 1) + fib(n - 2)
 }
 
 
@@ -163,9 +176,11 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    for (i in maxOf(n, m)..(m * n)) {
-        if (i % maxOf(n, m) == 0)
-            if (i % minOf(n, m) == 0)
+    val ma = maxOf(n, m)
+    val mi = minOf(n, m)
+    for (i in ma..(m * n)) {
+        if (i % ma == 0)
+            if (i % mi == 0)
                 return i
     }
     return (m * n)
@@ -250,26 +265,19 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun sin(x: Double, eps: Double): Double {
     var sinus = 0.0
     var pow = x % (2 * PI)
+    var xx = pow
     var fact = 1.0
-    //println(pow)
     for (i in (3..Int.MAX_VALUE) step 2) {
         sinus += pow / fact
         if (abs(pow) / fact < eps)
             break
-        pow = -pow * sqr(x)
+        pow = -(pow * sqr(xx))
         fact *= (i - 1) * i
+
     }
-    return sinus
+    return sinus + pow / fact
 }
 
-fun main(args: Array<String>) {
-    println(factorialq(0))
-    println(factorial(0))
-    println(9 / 10)
-    println(fib(5))
-    println(revert(2147447412).toDouble())
-    sin(100 * PI, 1e-5)
-}
 
 /**
  * Средняя (4 балла)
@@ -283,16 +291,18 @@ fun main(args: Array<String>) {
 fun cos(x: Double, eps: Double): Double {
     var cosin = 1.0
     var pow = -sqr(x % (2 * PI))
+    val xx = sqr(x % (2 * PI))
     var fact = 2.0
     for (i in (4..Int.MAX_VALUE) step 2) {
         cosin += pow / fact
-        if (abs(pow) / fact < eps)
+        if (abs(pow / fact) < eps)
             break
-        pow = -pow * sqr(x)
+        pow = -pow * sqr(xx)
         fact *= (i - 1) * i
     }
     return cosin
 }
+
 
 /**
  * Сложная (4 балла)
@@ -303,23 +313,41 @@ fun cos(x: Double, eps: Double): Double {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+
+fun longRevert(n: Long): Long {
+    var number = n
+    var result: Long = 0
+    while (number != 0.0.toLong()) {
+        result += number % 10
+        number /= 10
+        result *= 10
+    }
+    return (result / 10)
+}
+
 fun squareSequenceDigit(n: Int): Int {
-    var num = 0
+    var num: Long = 0
     var count: Int = n
     for (i in 1..Int.MAX_VALUE) {
-        num = sqr(i)
+        num = i.toLong() * i.toLong()
+        //flag = 0
+        //if (num % 10 == 0.0.toLong()) {
         num = num * 10 + 1
-        num = revert(num)
-        while (num != 1) {
+        //    flag = 1
+        //}
+        num = longRevert(num)
+        //println(num)
+        while (num != 1.0.toLong()) {
             if (count == 1) {
-                return num % 10
+                return (num % 10).toInt()
             }
             num /= 10
             count--
         }
     }
-    return num
+    return num.toInt()
 }
+
 
 /**
  * Сложная (5 баллов)
@@ -330,20 +358,35 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+
+fun longFib(n: Long): Long {
+    return if (n < 3) 1
+    else longFib(n - 1) + longFib(n - 2)
+}
 fun fibSequenceDigit(n: Int): Int {
-    var num = 0
+    var num: Long = 0
     var count: Int = n
     for (i in 1..Int.MAX_VALUE) {
-        num = fib(i)
+        num = longFib(i.toLong())
         num = num * 10 + 1
-        num = revert(num)
-        while (num != 1) {
+        num = longRevert(num)
+        while (num != 1.0.toLong()) {
             if (count == 1) {
-                return num % 10
+                return (num % 10).toInt()
             }
             num /= 10
             count--
         }
     }
-    return num
+    return num.toInt()
+}
+
+fun main(args: Array<String>) {
+    /* println(factorialq(0))
+     println(factorial(0))
+     println(9 / 10)
+     println(fib(5))
+     println(revert(2147447412).toDouble()) */
+    //print(lesson3.task1.cos(-18.832102629018816, 1e-10))
+    println(fibSequenceDigit(234))
 }
