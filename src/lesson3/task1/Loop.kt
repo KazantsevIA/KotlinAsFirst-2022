@@ -360,9 +360,21 @@ fun squareSequenceDigit(n: Int): Int {
  */
 
 fun longFib(n: Long): Long {
-    return if (n < 3) 1
-    else longFib(n - 1) + longFib(n - 2)
+    var num1: Long = 1
+    var num2: Long = 1
+    var flag = true
+    for (i in 3..n) {
+        if (flag) {
+            num1 += num2
+            flag = false
+        } else {
+            num2 += num1
+            flag = true
+        }
+    }
+    return maxOf(num1, num2)
 }
+
 fun fibSequenceDigit(n: Int): Int {
     var num: Long = 0
     var count: Int = n
