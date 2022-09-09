@@ -265,7 +265,7 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun sin(x: Double, eps: Double): Double {
     var sinus = 0.0
     var pow = x % (2 * PI)
-    var xx = pow
+    val xx = pow
     var fact = 1.0
     for (i in (3..Int.MAX_VALUE) step 2) {
         sinus += pow / fact
@@ -291,7 +291,7 @@ fun sin(x: Double, eps: Double): Double {
 fun cos(x: Double, eps: Double): Double {
     var cosin = 1.0
     var pow = -sqr(x % (2 * PI))
-    val xx = sqr(x % (2 * PI))
+    val xx = (x % (2 * PI))
     var fact = 2.0
     for (i in (4..Int.MAX_VALUE) step 2) {
         cosin += pow / fact
@@ -387,6 +387,6 @@ fun main(args: Array<String>) {
      println(9 / 10)
      println(fib(5))
      println(revert(2147447412).toDouble()) */
-    //print(lesson3.task1.cos(-18.832102629018816, 1e-10))
-    println(fibSequenceDigit(234))
+    print(lesson3.task1.sin(-18.832102629018816, 1e-10))
+    //println(fibSequenceDigit(234))
 }
