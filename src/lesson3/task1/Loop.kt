@@ -178,12 +178,15 @@ fun collatzSteps(x: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     val ma = maxOf(n, m)
     val mi = minOf(n, m)
-    for (i in ma..(m * n)) {
-        if (i % ma == 0)
-            if (i % mi == 0)
-                return i
+    var gcd = 0
+    for (i in mi downTo 1) {
+        if (mi % i == 0)
+            if (ma % i == 0) {
+                gcd = i
+                break
+            }
     }
-    return (m * n)
+    return (m * n) / gcd
 }
 
 /**
