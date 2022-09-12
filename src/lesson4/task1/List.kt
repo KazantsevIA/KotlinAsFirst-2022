@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.digitNumber
 import lesson3.task1.minDivisor
 import kotlin.math.sqrt
 
@@ -334,4 +335,48 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val first = listOf<String>(
+        "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
+    )
+    val fise = listOf<String>(
+        "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
+        "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
+    )
+    val second = listOf<String>(
+        "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+        "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
+    )
+    val third = listOf<String>(
+        "", "сто", "двести", "триста", "четыреста", "пятьсот",
+        "шестьсот", "семьсот", "восемьсот", "девятьсот"
+    )
+    var num = n
+    var digi = 0
+    val res = mutableListOf<String>()
+    while (digitNumber(num) != 1) {
+        when (digitNumber(num)) {
+            3 -> {
+                res.add(third[num / 100])
+                num %= 100
+            }
+
+            2 -> {
+                if (num in 11..19) {
+                    res.add(fise[(num % 10) - 1])
+                    break
+                }
+                res.add(second[(num % 10) - 1])
+            }
+        }
+
+    }
+    res.add(first[num % 10])
+    //println(res)
+    return res.joinToString(" ")
+}
+
+fun main(args: Array<String>) {
+    russian(22)
+
+}
