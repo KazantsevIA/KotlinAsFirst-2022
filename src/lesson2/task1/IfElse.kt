@@ -3,9 +3,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
-import lesson1.task1.seconds
 import lesson1.task1.sqr
-import lesson1.task1.thirdDigit
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -128,8 +126,8 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val danger1 = (rookX1 == kingX || rookY1 == kingY)
-    val danger2 = (rookX2 == kingX || rookY2 == kingY)
+    val danger1 = rookX1 == kingX || rookY1 == kingY
+    val danger2 = rookX2 == kingX || rookY2 == kingY
 
     return when {
         danger1 && danger2 -> 3
@@ -196,8 +194,8 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return when {
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+    when {
         c in a..b && d in a..b -> d - c
         c in a..b -> b - c
         d in a..b -> d - a
@@ -206,5 +204,5 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         b in c..d -> b - c
         else -> -1
     }
-}
+
 

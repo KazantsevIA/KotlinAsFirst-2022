@@ -2,11 +2,9 @@
 
 package lesson3.task1
 
-import lesson1.task1.numberRevert
 import lesson1.task1.sqr
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -110,8 +108,6 @@ fun fib(n: Int): Int {
         }
     }
     return maxOf(num1, num2)
-    //if (n < 3) return 1
-    //return fib(n - 1) + fib(n - 2)
 }
 
 
@@ -133,7 +129,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in (n / 2) downTo 2) {
+    for (i in sqrt(n.toDouble()).toInt() downTo 2) {
         if (n % i == 0) return i
     }
     return 1
@@ -175,19 +171,20 @@ fun collatzSteps(x: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    val ma = maxOf(n, m)
-    val mi = minOf(n, m)
-    var gcd = 0
+
+fun gcd(num1: Int, num2: Int): Int {
+    val ma = maxOf(num1, num2)
+    val mi = minOf(num1, num2)
     for (i in mi downTo 1) {
         if (mi % i == 0)
             if (ma % i == 0) {
-                gcd = i
-                break
+                return i
             }
     }
-    return (m * n) / gcd
+    return 1
 }
+
+fun lcm(m: Int, n: Int): Int = (m * n) / gcd(n, m)
 
 /**
  * Средняя (3 балла)
@@ -233,7 +230,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = (revert(n) == n)
+fun isPalindrome(n: Int): Boolean = revert(n) == n
 
 
 /**
@@ -333,14 +330,9 @@ fun squareSequenceDigit(n: Int): Int {
     var count: Int = n
     for (i in 1..Int.MAX_VALUE) {
         num = i.toLong() * i.toLong()
-        //flag = 0
-        //if (num % 10 == 0.0.toLong()) {
         num = num * 10 + 1
-        //    flag = 1
-        //}
         num = longRevert(num)
-        //println(num)
-        while (num != 1.0.toLong()) {
+        while (num != 1L) {
             if (count == 1) {
                 return (num % 10).toInt()
             }
@@ -385,7 +377,7 @@ fun fibSequenceDigit(n: Int): Int {
         num = longFib(i.toLong())
         num = num * 10 + 1
         num = longRevert(num)
-        while (num != 1.0.toLong()) {
+        while (num != 1L) {
             if (count == 1) {
                 return (num % 10).toInt()
             }
