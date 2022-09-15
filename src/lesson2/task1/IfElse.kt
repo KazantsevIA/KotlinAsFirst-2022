@@ -98,16 +98,16 @@ fun timeForHalfWay(
     return when {
         v1 * t1 >= halfWay -> {
             if (v1 * t1 == halfWay) t1
-            else (halfWay / v1)
+            else halfWay / v1
         }
 
         v1 * t1 + v2 * t2 >= halfWay -> {
-            if (v1 * t1 + v2 * t2 == halfWay) (t1 + t2)
-            else (t1 + (halfWay - (v1 * t1)) / v2)
+            if (v1 * t1 + v2 * t2 == halfWay) t1 + t2
+            else t1 + (halfWay - v1 * t1) / v2
         }
 
         else -> {
-            (t1 + t2 + (halfWay - (v1 * t1 + v2 * t2)) / v3)
+            t1 + t2 + (halfWay - (v1 * t1 + v2 * t2)) / v3
         }
     }
 }
@@ -152,8 +152,8 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    val danger1 = ((rookX == kingX) || (rookY == kingY))
-    val danger2 = (abs(bishopX - kingX) == abs(bishopY - kingY))
+    val danger1 = rookX == kingX || rookY == kingY
+    val danger2 = abs(bishopX - kingX) == abs(bishopY - kingY)
 
     return when {
         danger1 && danger2 -> 3
@@ -179,9 +179,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val midEdge = (a + b + c) - (maxEdge + minEdge)
     val cos = (sqr(midEdge) + sqr(minEdge) - sqr(maxEdge)) / (2 * midEdge * minEdge)
     return when {
-        (cos > 0) && (cos < 1) -> 0
+        cos > 0 && cos < 1 -> 0
         cos == 0.0 -> 1
-        (cos < 0) && (cos > -1) -> 2
+        cos < 0 && cos > -1 -> 2
         else -> -1
     }
 }

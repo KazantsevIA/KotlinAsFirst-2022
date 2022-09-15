@@ -129,7 +129,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n / 2 downTo 3) {
+    for (i in n / 2 downTo sqrt(n.toDouble()).toInt()) {
         if (n % i == 0) return i
     }
     return 1
@@ -175,7 +175,7 @@ fun collatzSteps(x: Int): Int {
 fun gcd(num1: Int, num2: Int): Int {
     val ma = maxOf(num1, num2)
     val mi = minOf(num1, num2)
-    for (i in mi downTo 1) {
+    for (i in mi downTo 2) {
         if (mi % i == 0)
             if (ma % i == 0) {
                 return i
@@ -193,15 +193,7 @@ fun lcm(m: Int, n: Int): Int = (m * n) / gcd(n, m)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..minOf(n, m)) {
-        if (minOf(n, m) % i == 0) {
-            if (maxOf(n, m) % i == 0)
-                return false
-        }
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = (gcd(m, n) == 1)
 
 /**
  * Средняя (3 балла)
@@ -210,16 +202,18 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int {
+fun longRevert(n: Long): Long {
     var number = n
     var result: Long = 0
-    while (number != 0) {
+    while (number != 0L) {
         result += number % 10
         number /= 10
         result *= 10
     }
-    return (result / 10).toInt()
+    return (result / 10)
 }
+
+fun revert(n: Int): Int = longRevert(n.toLong()).toInt()
 
 /**
  * Средняя (3 балла)
@@ -267,13 +261,12 @@ fun sin(x: Double, eps: Double): Double {
     var pow = x % (2 * PI)
     val xx = pow
     var fact = 1.0
-    for (i in (3..Int.MAX_VALUE) step 2) {
+    var i = 3
+    while (abs(pow) / fact >= eps) {
         sinus += pow / fact
-        if (abs(pow) / fact < eps)
-            break
         pow = -(pow * sqr(xx))
         fact *= (i - 1) * i
-
+        i += 2
     }
     return sinus + pow / fact
 }
@@ -293,13 +286,14 @@ fun cos(x: Double, eps: Double): Double {
     var pow = -sqr(x % (2 * PI))
     val xx = (x % (2 * PI))
     var fact = 2.0
-    for (i in (4..Int.MAX_VALUE) step 2) {
+    var i = 4
+    do {
         cosin += pow / fact
-        if (abs(pow / fact) < eps)
-            break
         pow = -pow * sqr(xx)
         fact *= (i - 1) * i
-    }
+        i += 2
+    } while (abs(pow / fact) >= eps)
+    cosin += pow / fact
     return cosin
 }
 
@@ -314,33 +308,31 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 
-fun longRevert(n: Long): Long {
-    var number = n
-    var result: Long = 0
-    while (number != 0.0.toLong()) {
-        result += number % 10
-        number /= 10
-        result *= 10
+fun longDigitNumber(n: Long): Int {
+    var count = 1
+    var m = n
+    while (m / 10 != 0L) {
+        m /= 10
+        count++
     }
-    return (result / 10)
+    return count
 }
 
 fun squareSequenceDigit(n: Int): Int {
     var num: Long = 0
     var count: Int = n
-    for (i in 1..Int.MAX_VALUE) {
-        num = i.toLong() * i.toLong()
-        num = num * 10 + 1
-        num = longRevert(num)
-        while (num != 1L) {
-            if (count == 1) {
-                return (num % 10).toInt()
-            }
-            num /= 10
-            count--
-        }
+    var i = 1L
+    while (count > 0) {
+        num = i * i
+        count -= longDigitNumber(num)
+        i++
     }
-    return num.toInt()
+
+    while (count != 0) {
+        num /= 10
+        count++
+    }
+    return (num % 10).toInt()
 }
 
 
@@ -373,20 +365,24 @@ fun longFib(n: Long): Long {
 fun fibSequenceDigit(n: Int): Int {
     var num: Long = 0
     var count: Int = n
-    for (i in 1..Int.MAX_VALUE) {
-        num = longFib(i.toLong())
-        num = num * 10 + 1
-        num = longRevert(num)
-        while (num != 1L) {
-            if (count == 1) {
-                return (num % 10).toInt()
-            }
-            num /= 10
-            count--
-        }
+    var f1 = 0L
+    var f2 = 1L
+    var i = 1L
+    while (count > 0) {
+        num = maxOf(f1, f2)
+        if (f1 < f2) f1 += f2
+        else f2 += f1
+        count -= longDigitNumber(num)
+        i++
     }
-    return num.toInt()
+
+    while (count != 0) {
+        num /= 10
+        count++
+    }
+    return (num % 10).toInt()
 }
+
 
 fun main(args: Array<String>) {
     /* println(factorialq(0))

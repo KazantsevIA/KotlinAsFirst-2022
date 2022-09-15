@@ -30,7 +30,7 @@ fun isNumberHappy(number: Int): Boolean =
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-    (x1 == x2) || (y1 == y2) || (sqr(x1 - x2) == sqr(y1 - y2))
+    x1 == x2 || y1 == y2 || sqr(x1 - x2) == sqr(y1 - y2)
 
 
 /**
@@ -39,10 +39,10 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Дан номер месяца (от 1 до 12 включительно) и год (положительный).
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
-fun daysInMonth(month: Int, year: Int): Int {
-    return when (month) {
+fun daysInMonth(month: Int, year: Int): Int =
+    when (month) {
         2 -> {
-            if (((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0)))
+            if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
                 29
             else
                 28
@@ -61,7 +61,7 @@ fun daysInMonth(month: Int, year: Int): Int {
         12 -> 31
         else -> 0
     }
-}
+
 
 /**
  * Простая (2 балла)
@@ -74,10 +74,10 @@ fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
 ): Boolean =
-    ((sqr((x1 + r1) - x2) + sqr(y1 - y2)) <= sqr(r2)) &&
-            ((sqr((x1 - r1) - x2) + sqr(y1 - y2)) <= sqr(r2)) &&
-            ((sqr(x1 - x2) + sqr((y1 + r1) - y2)) <= sqr(r2)) &&
-            ((sqr(x1 - x2) + sqr((y1 - r1) - y2)) <= sqr(r2))
+    sqr(x1 + r1 - x2) + sqr(y1 - y2) <= sqr(r2) &&
+            sqr(x1 - r1 - x2) + sqr(y1 - y2) <= sqr(r2) &&
+            sqr(x1 - x2) + sqr(y1 + r1 - y2) <= sqr(r2) &&
+            sqr(x1 - x2) + sqr(y1 - r1 - y2) <= sqr(r2)
 
 
 /**
