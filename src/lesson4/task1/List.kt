@@ -249,12 +249,12 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     val res = mutableListOf<Int>()
     var num = n
-    while (num != 1) {
-        res.add(num % base)
+    while (num >= base) {
+        res.add(0, num % base)
         num /= base
     }
-    res.add(num)
-    return res.asReversed()
+    res.add(0, num)
+    return res
 }
 
 /**
@@ -354,7 +354,7 @@ fun russian(n: Int): String {
     var num = n
     var digi = 0
     val res = mutableListOf<String>()
-    while (digitNumber(num) != 1) {
+    do {
         when (digitNumber(num)) {
             3 -> {
                 res.add(third[num / 100])
@@ -367,16 +367,22 @@ fun russian(n: Int): String {
                     break
                 }
                 res.add(second[(num % 10) - 1])
+                num %= 10
+            }
+
+            1 -> {
+                res.add(first[num % 10])
+                num = 0
             }
         }
 
-    }
-    res.add(first[num % 10])
+    } while (num != 0)
+
     //println(res)
     return res.joinToString(" ")
 }
 
 fun main(args: Array<String>) {
-    russian(22)
+    println(russian(990))
 
 }
