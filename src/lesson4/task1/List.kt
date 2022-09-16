@@ -378,7 +378,6 @@ fun russian(n: Int): String {
                 if (num / 1000 in 11..19) {
                     res.add(teen[(num / 1000) % 10])
                     num %= 1000
-                    //res += "тысяч"
                 }
                 res.add(second[num / 10000])
                 num %= 10000
