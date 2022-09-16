@@ -277,7 +277,15 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var res = digits[digits.size - 1]
+    var bas = base
+    for (i in digits.size - 2 downTo 0) {
+        res += digits[i] * bas
+        bas *= base
+    }
+    return res
+}
 
 /**
  * Сложная (4 балла)
@@ -339,23 +347,49 @@ fun russian(n: Int): String {
     val first = listOf<String>(
         "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
     )
-    val fise = listOf<String>(
-        "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
+    val teen = listOf<String>(
+        "", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
         "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
     )
     val second = listOf<String>(
-        "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+        "", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
         "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
     )
     val third = listOf<String>(
         "", "сто", "двести", "триста", "четыреста", "пятьсот",
         "шестьсот", "семьсот", "восемьсот", "девятьсот"
     )
+    val fourth = listOf<String>(
+        "", "тычяча", "две тысячи", "три тысячи", "четыре тысячи",
+        "пять тысяч", "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч"
+    )
+
     var num = n
-    var digi = 0
     val res = mutableListOf<String>()
     do {
         when (digitNumber(num)) {
+            6 -> {
+                res.add(third[num / 100000])
+                num %= 100000
+                if (num < 1000) res += "тысяч"
+            }
+
+            5 -> {
+                if (num / 1000 in 11..19) {
+                    res.add(teen[(num / 1000) % 10])
+                    num %= 1000
+                    //res += "тысяч"
+                }
+                res.add(second[num / 10000])
+                num %= 10000
+                if (num < 1000) res += "тысяч"
+            }
+
+            4 -> {
+                res.add(fourth[num / 1000])
+                num %= 1000
+            }
+
             3 -> {
                 res.add(third[num / 100])
                 num %= 100
@@ -363,26 +397,25 @@ fun russian(n: Int): String {
 
             2 -> {
                 if (num in 11..19) {
-                    res.add(fise[(num % 10) - 1])
+                    res.add(teen[num % 10])
                     break
                 }
-                res.add(second[(num % 10) - 1])
+                res.add(second[num / 10])
                 num %= 10
             }
 
             1 -> {
-                res.add(first[num % 10])
+                res.add(first[num])
                 num = 0
             }
         }
 
     } while (num != 0)
-
-    //println(res)
+    res.remove("")
     return res.joinToString(" ")
 }
 
 fun main(args: Array<String>) {
-    println(russian(990))
+    println(russian(219000))
 
 }
