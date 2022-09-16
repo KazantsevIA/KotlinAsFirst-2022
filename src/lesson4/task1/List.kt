@@ -195,7 +195,7 @@ fun polynom(p: List<Int>, x: Int): Int {
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
     if (list.isEmpty()) return list
-    val adds = mutableListOf<Int>(list[0])
+    val adds = mutableListOf(list[0])
     for (i in 1 until list.size) {
         list[i] += adds.sum()
         adds.add(list[i] - adds.sum())
@@ -314,8 +314,8 @@ fun roman(n: Int): String {
     var i = 0
     val ress = mutableListOf<String>()
     val res = mutableListOf<Int>()
-    val sep = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-    val rom = listOf<String>("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    val sep = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val rom = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
     while (num != 0) {
         if (num < sep[i]) {
             i++
@@ -344,22 +344,22 @@ fun roman(n: Int): String {
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    val first = listOf<String>(
+    val first = listOf(
         "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
     )
-    val teen = listOf<String>(
+    val teen = listOf(
         "", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
         "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
     )
-    val second = listOf<String>(
+    val second = listOf(
         "", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
         "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
     )
-    val third = listOf<String>(
+    val third = listOf(
         "", "сто", "двести", "триста", "четыреста", "пятьсот",
         "шестьсот", "семьсот", "восемьсот", "девятьсот"
     )
-    val fourth = listOf<String>(
+    val fourth = listOf(
         "", "тычяча", "две тысячи", "три тысячи", "четыре тысячи",
         "пять тысяч", "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч"
     )
