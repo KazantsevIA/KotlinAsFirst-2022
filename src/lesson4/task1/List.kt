@@ -343,74 +343,113 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String {
-    val first = listOf(
-        "", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
+
+fun first(n: Int): String {
+    val firstList = listOf(
+        "-", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
     )
-    val teen = listOf(
-        "", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
+    return firstList[n]
+}
+
+fun teen(n: Int): String {
+    val teenList = listOf(
+        "-", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать",
         "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
     )
-    val second = listOf(
-        "", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+    return teenList[n]
+}
+
+fun second(n: Int): String {
+    val secondList = listOf(
+        "-", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
         "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
     )
-    val third = listOf(
-        "", "сто", "двести", "триста", "четыреста", "пятьсот",
+    return secondList[n]
+}
+
+fun third(n: Int): String {
+    val thirdList = listOf(
+        "-", "сто", "двести", "триста", "четыреста", "пятьсот",
         "шестьсот", "семьсот", "восемьсот", "девятьсот"
     )
-    val fourth = listOf(
-        "", "тычяча", "две тысячи", "три тысячи", "четыре тысячи",
+    return thirdList[n]
+}
+
+fun fourth(n: Int): String {
+    val fourthList = listOf(
+        "-", "тычяча", "две тысячи", "три тысячи", "четыре тысячи",
         "пять тысяч", "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч"
     )
+    return fourthList[n]
+}
 
+fun thousands(n: Int): List<String> {
     var num = n
     val res = mutableListOf<String>()
     do {
         when (digitNumber(num)) {
-            6 -> {
-                res.add(third[num / 100000])
-                num %= 100000
-                if (num < 1000) res += "тысяч"
-            }
-
-            5 -> {
-                if (num / 1000 in 11..19) {
-                    res.add(teen[(num / 1000) % 10])
-                    num %= 1000
-                }
-                res.add(second[num / 10000])
-                num %= 10000
-                if (num < 1000) res += "тысяч"
-            }
-
-            4 -> {
-                res.add(fourth[num / 1000])
-                num %= 1000
-            }
-
             3 -> {
-                res.add(third[num / 100])
+                res.add(third(num / 100))
                 num %= 100
             }
 
             2 -> {
                 if (num in 11..19) {
-                    res.add(teen[num % 10])
-                    break
+                    res.add(teen(num % 10))
+                    num = 0
                 }
-                res.add(second[num / 10])
+                res.add(second(num / 10))
                 num %= 10
             }
 
             1 -> {
-                res.add(first[num])
+                res.add(fourth(num))
+                if (num == 0)
+                    res += "тысяч"
+                num = -1
+            }
+        }
+    } while (num != -1)
+    return res
+}
+
+fun units(n: Int): List<String> {
+    var num = n
+    val res = mutableListOf<String>()
+    do {
+        when (digitNumber(num)) {
+
+            3 -> {
+                res.add(third(num / 100))
+                num %= 100
+            }
+
+            2 -> {
+                if (num in 11..19) {
+                    res.add(teen(num % 10))
+                    break
+                }
+                res.add(second(num / 10))
+                num %= 10
+            }
+
+            1 -> {
+                res.add(first(num))
                 num = 0
             }
         }
 
     } while (num != 0)
-    res.remove("")
+    return res
+}
+
+fun russian(n: Int): String {
+    val res = mutableListOf<String>()
+    if (n >= 1000)
+        res += thousands(n / 1000)
+    res += units(n % 1000)
+    while("-" in res)
+        res.remove("-")
     return res.joinToString(" ")
 }
 
