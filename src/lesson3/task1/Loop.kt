@@ -129,8 +129,8 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n / 2 downTo sqrt(n.toDouble()).toInt()) {
-        if (n % i == 0) return i
+    for (i in 2..sqrt(n.toDouble()).toInt()) {
+        if (n % i == 0) return n / i
     }
     return 1
 }
@@ -173,13 +173,13 @@ fun collatzSteps(x: Int): Int {
  */
 
 fun gcd(num1: Int, num2: Int): Int {
-    val ma = maxOf(num1, num2)
-    val mi = minOf(num1, num2)
-    for (i in mi downTo 2) {
-        if (mi % i == 0)
-            if (ma % i == 0) {
-                return i
-            }
+    var a = num1
+    var b = num2
+    while (a != 0 && b != 0) {
+        if (num1 > num2)
+            a %= b
+        else
+            b %= a
     }
     return 1
 }
@@ -193,7 +193,7 @@ fun lcm(m: Int, n: Int): Int = (m * n) / gcd(n, m)
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = (gcd(m, n) == 1)
+fun isCoPrime(m: Int, n: Int): Boolean = gcd(m, n) == 1
 
 /**
  * Средняя (3 балла)
@@ -210,7 +210,7 @@ fun longRevert(n: Long): Long {
         number /= 10
         result *= 10
     }
-    return (result / 10)
+    return result / 10
 }
 
 fun revert(n: Int): Int = longRevert(n.toLong()).toInt()
@@ -284,7 +284,7 @@ fun sin(x: Double, eps: Double): Double {
 fun cos(x: Double, eps: Double): Double {
     var cosin = 1.0
     var pow = -sqr(x % (2 * PI))
-    val xx = (x % (2 * PI))
+    val xx = x % (2 * PI)
     var fact = 2.0
     var i = 4
     do {
@@ -345,22 +345,6 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-
-fun longFib(n: Long): Long {
-    var num1: Long = 1
-    var num2: Long = 1
-    var flag = true
-    for (i in 3..n) {
-        if (flag) {
-            num1 += num2
-            flag = false
-        } else {
-            num2 += num1
-            flag = true
-        }
-    }
-    return maxOf(num1, num2)
-}
 
 fun fibSequenceDigit(n: Int): Int {
     var num: Long = 0
