@@ -448,7 +448,7 @@ fun russian(n: Int): String {
     if (n >= 1000)
         res += thousands(n / 1000)
     res += units(n % 1000)
-    while("-" in res)
+    while ("-" in res)
         res.remove("-")
     return res.joinToString(" ")
 }
