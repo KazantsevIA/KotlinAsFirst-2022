@@ -175,13 +175,13 @@ fun collatzSteps(x: Int): Int {
 fun gcd(num1: Int, num2: Int): Int {
     var a = num1
     var b = num2
-    while (a != 0 && b != 0) {
-        if (num1 > num2)
-            a %= b
+    while (a != b) {
+        if (a > b)
+            a -= b
         else
-            b %= a
+            b -= a
     }
-    return 1
+    return a
 }
 
 fun lcm(m: Int, n: Int): Int = (m * n) / gcd(n, m)
