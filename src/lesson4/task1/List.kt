@@ -377,7 +377,7 @@ fun third(n: Int): String {
 
 fun fourth(n: Int): String {
     val fourthList = listOf(
-        "-", "тычяча", "две тысячи", "три тысячи", "четыре тысячи",
+        "-", "одна тыcяча", "две тысячи", "три тысячи", "четыре тысячи",
         "пять тысяч", "шесть тысяч", "семь тысяч", "восемь тысяч", "девять тысяч"
     )
     return fourthList[n]
@@ -454,6 +454,6 @@ fun russian(n: Int): String {
 }
 
 fun main(args: Array<String>) {
-    println(russian(219000))
+    println(russian(251000))
 
 }
