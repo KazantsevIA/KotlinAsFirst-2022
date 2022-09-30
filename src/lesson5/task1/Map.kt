@@ -178,10 +178,15 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val res: MutableMap<String, String> = mapA.toMutableMap()
-    for ((key, value) in mapA) {
-        if (key in mapB) {
-            
-        }
+    for ((key, value) in mapB) {
+        if (key in mapA) {
+            res[key] += ", ${mapB[key]}"
+        } else
+            res += Pair(key, value)
+    }
+    for ((key, value) in res) {
+        var vallist = value.split(", ").toList()
+        res[key] = vallist.toSet().toList().joinToString(", ")
     }
     return res
 }
@@ -196,7 +201,12 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val res = mutableMapOf<String, Double>()
+    for ((name, price) in stockPrices) {
+
+    }
+}
 
 /**
  * Средняя (4 балла)
