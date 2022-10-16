@@ -138,7 +138,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
     val keyToRemove = mutableListOf<String>()
-    for ((key, value) in a)
+    for ((key) in a)
         if (a[key] == b[key])
             keyToRemove.add(key)
     for (items in keyToRemove)
@@ -185,7 +185,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
             res += Pair(key, value)
     }
     for ((key, value) in res) {
-        var vallist = value.split(", ").toList()
+        val vallist = value.split(", ").toList()
         res[key] = vallist.toSet().toList().joinToString(", ")
     }
     return res
@@ -203,10 +203,20 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val res = mutableMapOf<String, Double>()
-    for ((name, price) in stockPrices) {
+    val pricelist = stockPrices.sortedBy { String() }
+    val prices = mutableMapOf<String, MutableList<Double>>()
 
-    }
+    for ((first) in pricelist)
+        prices += Pair(first, mutableListOf())
+    for ((name, price) in pricelist)
+        prices[name]?.add(price)
+    for ((name, price) in prices)
+        res[name] = price.sum() / price.size
+
+    return res
+
 }
+
 
 /**
  * Средняя (4 балла)
@@ -223,7 +233,20 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    val prices = mutableListOf<Pair<String, Double>>()
+    for (i in stuff) {
+        prices.add(i.value)
+    }
+    prices.sortedBy { it.second }
+    for (pai in prices) {
+        if (pai.first == kind)
+            for (i in stuff)
+                if (i.value == pai)
+                    return i.key
+    }
+    return null
+}
 
 /**
  * Средняя (3 балла)
@@ -234,7 +257,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    val charas = chars.sorted()
+    val wrd = word.toSet().toList().sorted()
+    return wrd == charas
+}
 
 /**
  * Средняя (4 балла)
