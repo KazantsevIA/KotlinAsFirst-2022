@@ -234,16 +234,16 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    val prices = mutableListOf<Pair<String, Double>>()
+    var prices = mutableListOf<Pair<String, Double>>()
     for (i in stuff) {
         prices.add(i.value)
     }
-    prices.sortedBy { it.second }
+    prices = prices.sortedBy { it.second }.toMutableList()
     for (pai in prices) {
         if (pai.first == kind)
-            for (i in stuff)
-                if (i.value == pai)
-                    return i.key
+            for ((key, value) in stuff)
+                if (value == pai)
+                    return key
     }
     return null
 }
@@ -260,7 +260,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     val charas = chars.sorted()
     val wrd = word.toSet().toList().sorted()
-    return wrd == charas
+    return charas.containsAll(wrd)
 }
 
 /**
@@ -275,7 +275,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val repeats = mutableMapOf<String, Int>()
+    for (i in list.toSet())
+        repeats[i] = list.count { it == i }
+
+    return repeats.filter { it.value > 1 }
+}
 
 /**
  * Средняя (3 балла)
@@ -325,7 +331,20 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "GoodGnome" to setOf()
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val res = friends.toMutableMap()
+    for ((key, value) in friends) {
+        val tempFriends = value.toMutableSet()
+        for (friend in value) {
+            if (friend !in res.keys)
+                res[friend] = setOf()
+            tempFriends += friends[friend]?.toMutableSet() ?: continue
+        }
+        res[key] = tempFriends.minus(key)
+    }
+
+    return res
+}
 
 /**
  * Сложная (6 баллов)
@@ -344,7 +363,13 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in list) {
+        if (number - i in list.drop(i))
+            return Pair(list.indexOf(i), list.indexOf(number - i))
+    }
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная (8 баллов)
