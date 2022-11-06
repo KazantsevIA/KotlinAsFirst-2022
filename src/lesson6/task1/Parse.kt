@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +76,34 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun transDate(str: String, to: Boolean): String {
+    val st = listOf(
+        "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+        "сентября", "октября", "ноября", "декабря"
+    )
+    //if (str !in st)
+    //    return ""
+    return if (to) (st.indexOf(str) + 1).toString()
+    else st[str.toInt() - 1]
+}
+
+fun dateStrToDigit(str: String): String {
+    val date = str.split(" ").toMutableList()
+    if (str.matches(Regex("""\d+\s[а-я]+\s\d+"""))) {
+        try {
+            date[1] = transDate(date[1], true)
+        } catch (e: Exception) {
+            return ""
+        }
+
+        if (daysInMonth(date[1].toInt(), date[2].toInt()) < date[0].toInt()) return ""
+        if (date[1] == "0") return ""
+        return String.format("%02d.%02d.%d", date[0].toInt(), date[1].toInt(), date[2].toInt())
+    }
+    return ""
+
+
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +115,19 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val date = digital.split(".").toMutableList()
+    if (digital.matches(Regex("""\d+\.\d\d.\d+"""))) {
+        try {
+            date[1] = transDate(date[1], false)
+        } catch (e: Exception) {
+            return ""
+        }
+        if (daysInMonth(digital.split(".")[1].toInt(), date[2].toInt()) < date[0].toInt()) return ""
+        return String.format("%d %s %d", date[0].toInt(), date[1], date[2].toInt())
+    }
+    return ""
+}
 
 /**
  * Средняя (4 балла)
@@ -102,8 +143,11 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
-
+fun flattenPhoneNumber(phone: String): String {
+    if (phone.matches(Regex("""(\+\d+)?\s*(\(([0-9]+[ -]*)+\))?\s*([0-9 -])*""")))
+        return phone.filter { it == '+' || it.isDigit() }
+    return ""
+}
 /**
  * Средняя (5 баллов)
  *
@@ -114,7 +158,14 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if (jumps.matches(Regex("""\d+[0-9- %]*"""))) {
+        val str = jumps.filter { it.isDigit() or it.isWhitespace() }
+        return str.split(" ").filter { it.matches(Regex("""\d+""")) }.map { it.toInt() }.max()
+    }
+    return -1
+}
+
 
 /**
  * Сложная (6 баллов)
@@ -175,7 +226,21 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    var res = 0
+    var romstr = roman
+    val sep = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val rom = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    while (romstr.isNotEmpty()) {
+        for (i in rom.indices) {
+            if (rom[i] in romstr) {
+                res += sep[i]
+                romstr.removePrefix(rom[i])
+            }
+        }
+    }
+    return res
+}
 
 /**
  * Очень сложная (7 баллов)
