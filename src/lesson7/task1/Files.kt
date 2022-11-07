@@ -319,7 +319,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             continue
         }
         var eLine = line
-        if (line.matches(Regex("""\s+""")))
+        if (line.matches(Regex("""\w+""")))
             flag = false
         while ("**" in eLine) {
             if (signs["**"] == false) {
