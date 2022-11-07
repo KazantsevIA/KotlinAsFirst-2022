@@ -231,7 +231,7 @@ fun fromRoman(roman: String): Int {
     var romstr = roman
     val sep = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     val rom = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    if (!roman.matches(Regex("""[MCDXLIV]*""")))
+    if (!roman.matches(Regex("""[MCDXLIV ]*""")))
         return -1
     while (romstr.isNotEmpty()) {
         for (i in rom.indices) {
