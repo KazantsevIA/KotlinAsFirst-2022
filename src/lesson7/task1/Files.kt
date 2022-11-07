@@ -308,7 +308,47 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val signs = mutableMapOf<String, Boolean>(("*") to false, ("**") to false, ("~~") to false)
+    val writer = File(outputName).bufferedWriter()
+    writer.write("<html>\n<body>\n<p>\n")
+    for (line in File(inputName).readLines()) {
+        if (line == "") {
+            writer.write("</p>\n<p>")
+            continue
+        }
+        var eLine = line
+        while ("**" in eLine) {
+            if (signs["**"] == false) {
+                eLine = eLine.replaceFirst("**", "<b>")
+                signs["**"] = true
+            } else {
+                eLine = eLine.replaceFirst("**", "</b>")
+                signs["**"] = false
+            }
+        }
+        while ("*" in eLine) {
+            if (signs["*"] == false) {
+                eLine = eLine.replaceFirst("*", "<i>")
+                signs["*"] = true
+            } else {
+                eLine = eLine.replaceFirst("*", "</i>")
+                signs["*"] = false
+            }
+        }
+        while ("~~" in eLine) {
+            if (signs["~~"] == false) {
+                eLine = eLine.replaceFirst("~~", "<s>")
+                signs["~~"] = true
+            } else {
+                eLine = eLine.replaceFirst("~~", "</s>")
+                signs["~~"] = false
+            }
+        }
+        writer.write(eLine)
+        writer.newLine()
+    }
+    writer.write("</p>\n</body>\n</html>")
+    writer.close()
 }
 
 /**
