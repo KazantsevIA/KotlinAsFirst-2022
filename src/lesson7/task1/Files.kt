@@ -310,7 +310,7 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val signs = mutableMapOf<String, Boolean>(("*") to false, ("**") to false, ("~~") to false)
     val writer = File(outputName).bufferedWriter()
-    var flag = false
+    var flag = true
     writer.write("<html>\n<body>\n<p>\n")
     for (line in File(inputName).readLines()) {
         if ((line == "" || line == "\n") && !flag) {
