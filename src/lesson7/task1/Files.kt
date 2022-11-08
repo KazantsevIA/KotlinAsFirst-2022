@@ -313,7 +313,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var flag = false
     writer.write("<html>\n<body>\n<p>\n")
     for (line in File(inputName).readLines()) {
-        if ((line == "\n" || line == "") && flag) {
+        if ((line.filter { !it.isWhitespace() } == "\n" || line.filter { !it.isWhitespace() } == "") && flag) {
             writer.write("</p>\n<p>\n")
             flag = false
             continue
