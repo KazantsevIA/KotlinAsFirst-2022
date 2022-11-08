@@ -308,19 +308,20 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val signs = mutableMapOf<String, Boolean>(("*") to false, ("**") to false, ("~~") to false)
+    val signs = mutableMapOf("*" to false, "**" to false, "~~" to false)
     val writer = File(outputName).bufferedWriter()
-    var flag = true
+    var flag = false
     writer.write("<html>\n<body>\n<p>\n")
     for (line in File(inputName).readLines()) {
-        if ((line == "" || line == "\n") && !flag) {
-            writer.write("</p>\n<p>")
-            flag = true
+        if ((line == "\n" || line == "") && flag) {
+            writer.write("</p>\n<p>\n")
+            flag = false
             continue
         }
         var eLine = line
-        if (line.matches(Regex("""\w+""")))
-            flag = false
+        if (line.filter { !it.isWhitespace() } != "") {//matches(Regex("""\w+"""))) {
+            flag = true
+        }
         while ("**" in eLine) {
             if (signs["**"] == false) {
                 eLine = eLine.replaceFirst("**", "<b>")
