@@ -310,16 +310,17 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val signs = mutableMapOf("*" to false, "**" to false, "~~" to false)
     val writer = File(outputName).bufferedWriter()
-    var flag = false
+    var flag = true
     writer.write("<html>\n<body>\n<p>\n")
     for (line in File(inputName).readLines()) {
         if ((line.filter { !it.isWhitespace() } == "\n" || line.filter { !it.isWhitespace() } == "") && flag) {
-            writer.write("</p>\n<p>\n")
+            //writer.write("</p>\n<p>\n")
             flag = false
             continue
         }
         var eLine = line
-        if (line.filter { !it.isWhitespace() } != "") {//matches(Regex("""\w+"""))) {
+        if (line.filter { !it.isWhitespace() } != "" && !flag) {
+            eLine = "</p>\n<p>\n$eLine"
             flag = true
         }
         while ("**" in eLine) {
