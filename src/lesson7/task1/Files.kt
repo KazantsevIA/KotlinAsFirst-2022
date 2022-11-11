@@ -310,18 +310,19 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val signs = mutableMapOf("*" to false, "**" to false, "~~" to false)
     val writer = File(outputName).bufferedWriter()
-    var flag = true
+    var flag = false
+    var addp = false
     writer.write("<html>\n<body>\n<p>\n")
     for (line in File(inputName).readLines()) {
         if ((line.filter { !it.isWhitespace() } == "\n" || line.filter { !it.isWhitespace() } == "") && flag) {
-            //writer.write("</p>\n<p>\n")
             flag = false
+            addp = true
             continue
         }
         var eLine = line
-        if (line.filter { !it.isWhitespace() } != "" && !flag) {
+        if (line.filter { !it.isWhitespace() } != "" && addp) {
             eLine = "</p>\n<p>\n$eLine"
-            flag = true
+            addp = false
         }
         while ("**" in eLine) {
             if (signs["**"] == false) {
@@ -331,6 +332,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 eLine = eLine.replaceFirst("**", "</b>")
                 signs["**"] = false
             }
+            flag = true
         }
         while ("*" in eLine) {
             if (signs["*"] == false) {
@@ -340,6 +342,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 eLine = eLine.replaceFirst("*", "</i>")
                 signs["*"] = false
             }
+            flag = true
         }
         while ("~~" in eLine) {
             if (signs["~~"] == false) {
@@ -349,6 +352,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 eLine = eLine.replaceFirst("~~", "</s>")
                 signs["~~"] = false
             }
+            flag = true
         }
         writer.write(eLine)
         writer.newLine()
