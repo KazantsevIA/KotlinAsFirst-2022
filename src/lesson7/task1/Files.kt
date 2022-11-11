@@ -320,9 +320,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             continue
         }
         var eLine = line
-        if (line.filter { !it.isWhitespace() } != "" && addp) {
-            eLine = "</p>\n<p>\n$eLine"
-            addp = false
+        if (line.filter { !it.isWhitespace() } != "") {
+            flag = true
+            if (addp) {
+                eLine = "</p>\n<p>\n$eLine"
+                addp = false
+            }
         }
         while ("**" in eLine) {
             if (signs["**"] == false) {
@@ -332,7 +335,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 eLine = eLine.replaceFirst("**", "</b>")
                 signs["**"] = false
             }
-            flag = true
         }
         while ("*" in eLine) {
             if (signs["*"] == false) {
@@ -342,7 +344,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 eLine = eLine.replaceFirst("*", "</i>")
                 signs["*"] = false
             }
-            flag = true
         }
         while ("~~" in eLine) {
             if (signs["~~"] == false) {
@@ -352,7 +353,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 eLine = eLine.replaceFirst("~~", "</s>")
                 signs["~~"] = false
             }
-            flag = true
         }
         writer.write(eLine)
         writer.newLine()
