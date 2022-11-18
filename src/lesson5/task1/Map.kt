@@ -118,7 +118,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     for ((key, value) in a)
-        if (b[key] != value || key !in b.keys) return false
+        if (b[key] != value) return false
     return true
 }
 
@@ -137,12 +137,9 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> a changes to mutableMapOf() aka becomes empty
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    val keyToRemove = mutableListOf<String>()
-    for ((key) in a)
+    for ((key) in b)
         if (a[key] == b[key])
-            keyToRemove.add(key)
-    for (items in keyToRemove)
-        a.remove(items)
+            a.remove(key)
 }
 
 /**
@@ -153,10 +150,10 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val res = mutableListOf<String>()
+    val res = mutableSetOf<String>()
     for (names in a)
-        if (names in b && names !in res) res.add(names)
-    return res
+        if (names in b) res.add(names)
+    return res.toList()
 }
 
 /**
@@ -179,14 +176,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val res: MutableMap<String, String> = mapA.toMutableMap()
     for ((key, value) in mapB) {
-        if (key in mapA) {
-            res[key] += ", ${mapB[key]}"
-        } else
-            res += Pair(key, value)
-    }
-    for ((key, value) in res) {
-        val vallist = value.split(", ").toList()
-        res[key] = vallist.toSet().toList().joinToString(", ")
+        //res[key] = (res[key]?.split(", ") + value.split(", ")).toSet().joinToString()
     }
     return res
 }
@@ -203,12 +193,11 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val res = mutableMapOf<String, Double>()
-    val pricelist = stockPrices.sortedBy { String() }
     val prices = mutableMapOf<String, MutableList<Double>>()
 
-    for ((first) in pricelist)
+    for ((first) in stockPrices)
         prices += Pair(first, mutableListOf())
-    for ((name, price) in pricelist)
+    for ((name, price) in stockPrices)
         prices[name]?.add(price)
     for ((name, price) in prices)
         res[name] = price.sum() / price.size
@@ -258,8 +247,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val charas = chars.sorted().map { it.lowercaseChar() }
-    val wrd = word.toSet().toList().sorted().map { it.lowercaseChar() }
+    val charas = chars.map { it.lowercaseChar() }.toSet()
+    val wrd = word.toSet().map { it.lowercaseChar() }
     return charas.containsAll(wrd)
 }
 

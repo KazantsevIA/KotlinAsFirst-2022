@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson3.task1.digitNumber
 import lesson3.task1.minDivisor
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -130,7 +131,7 @@ fun abs(v: List<Double>): Double = sqrt(v.sumOf { it * it })
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double =
-    if (list.average().isNaN()) 0.0
+    if (list.isEmpty()) 0.0
     else list.average()
 
 //if (list.isEmpty()) 0.0
@@ -175,16 +176,8 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int {
-    if (p.isEmpty()) return 0
-    var res = p[0]
-    var xx = x
-    for (i in 1 until p.size) {
-        res += p[i] * xx
-        xx *= x
-    }
-    return res
-}
+fun polynom(p: List<Int>, x: Int): Int =
+    p.mapIndexed() { index, it -> it * x.toDouble().pow(index).toInt() }.sum()
 
 /**
  * Средняя (3 балла)
@@ -197,11 +190,8 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.isEmpty()) return list
-    val adds = mutableListOf(list[0])
     for (i in 1 until list.size) {
-        list[i] += adds.sum()
-        adds.add(list[i] - adds.sum())
+        list[i] += list[i-1]
     }
     return list
 }
@@ -219,7 +209,6 @@ fun factorize(n: Int): List<Int> {
     while (nn != 1) {
         res.add(minDivisor(nn))
         nn /= minDivisor(nn)
-
     }
     return res
 }
@@ -231,16 +220,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    var nn = n
-    var res = ""
-    while (nn != 1) {
-        res += "${minDivisor(nn)}*"
-        nn /= minDivisor(nn)
-
-    }
-    return res.dropLast(1)
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString("*")
 
 /**
  * Средняя (3 балла)
@@ -253,11 +233,11 @@ fun convert(n: Int, base: Int): List<Int> {
     val res = mutableListOf<Int>()
     var num = n
     while (num >= base) {
-        res.add(0, num % base)
+        res.add(num % base)
         num /= base
     }
-    res.add(0, num)
-    return res
+    res.add(num)
+    return res.reversed()
 }
 
 /**
@@ -316,7 +296,6 @@ fun roman(n: Int): String {
     var num = n
     var i = 0
     val ress = mutableListOf<String>()
-    val res = mutableListOf<Int>()
     val sep = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     val rom = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
     while (num != 0) {
@@ -324,17 +303,8 @@ fun roman(n: Int): String {
             i++
             continue
         }
-        res.add(sep[i])
+        ress.add(rom[i])
         num -= sep[i]
-    }
-    i = 0
-    while (res.isNotEmpty()) {
-        if (res[0] == sep[i]) {
-            ress.add(rom[i])
-            res.removeAt(0)
-            continue
-        }
-        i++
     }
     return ress.joinToString("")
 }

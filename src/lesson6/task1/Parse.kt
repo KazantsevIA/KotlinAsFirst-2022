@@ -81,28 +81,19 @@ fun transDate(str: String, to: Boolean): String {
         "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
         "сентября", "октября", "ноября", "декабря"
     )
-    //if (str !in st)
-    //    return ""
     return if (to) (st.indexOf(str) + 1).toString()
     else st[str.toInt() - 1]
 }
 
 fun dateStrToDigit(str: String): String {
-    val date = str.split(" ").toMutableList()
-    if (str.matches(Regex("""\d+\s[а-я]+\s\d+"""))) {
-        try {
-            date[1] = transDate(date[1], true)
-        } catch (e: Exception) {
-            return ""
-        }
-
-        if (daysInMonth(date[1].toInt(), date[2].toInt()) < date[0].toInt()) return ""
-        if (date[1] == "0") return ""
-        return String.format("%02d.%02d.%d", date[0].toInt(), date[1].toInt(), date[2].toInt())
-    }
-    return ""
-
-
+    if (!str.matches(Regex("""\d+\s[а-я]+\s\d+""")))
+        return ""
+    val date =
+        str.replace(Regex("""[а-я]"""), "0").split(" ").map { it.toInt() }.toMutableList()
+    date[1] = transDate(str.filter { it.isLetter() }, true).toInt()
+    if (daysInMonth(date[1], date[2]) < date[0]) return ""
+    if (date[1] == 0) return ""
+    return String.format("%02d.%02d.%d", date[0], date[1], date[2])
 }
 
 /**
@@ -116,17 +107,11 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-    val date = digital.split(".").toMutableList()
-    if (digital.matches(Regex("""\d+\.\d\d.\d+"""))) {
-        try {
-            date[1] = transDate(date[1], false)
-        } catch (e: Exception) {
-            return ""
-        }
-        if (daysInMonth(digital.split(".")[1].toInt(), date[2].toInt()) < date[0].toInt()) return ""
-        return String.format("%d %s %d", date[0].toInt(), date[1], date[2].toInt())
-    }
-    return ""
+    if (!digital.matches(Regex("""\d+\.\d\d.\d+""")))
+        return ""
+    val date = digital.split(".").toMutableList().map { it.toInt() }
+    if (daysInMonth(date[1], date[2]) < date[0]) return ""
+    return String.format("%d %s %d", date[0], transDate(date[1].toString(), false), date[2])
 }
 
 /**
@@ -148,6 +133,7 @@ fun flattenPhoneNumber(phone: String): String {
         return phone.filter { it == '+' || it.isDigit() }
     return ""
 }
+
 /**
  * Средняя (5 баллов)
  *
@@ -160,7 +146,7 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     if (jumps.matches(Regex("""\d+[0-9- %]*"""))) {
-        val str = jumps.filter { it.isDigit() or it.isWhitespace() }
+        val str = jumps.filter { it.isDigit() || it.isWhitespace() }
         return str.split(" ").filter { it.matches(Regex("""\d+""")) }.map { it.toInt() }.max()
     }
     return -1
@@ -228,16 +214,16 @@ fun mostExpensive(description: String): String = TODO()
  */
 fun fromRoman(roman: String): Int {
     var res = 0
-    var romstr = roman
+    var cursor = 0
     val sep = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
     val rom = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
     if (!roman.matches(Regex("""[MCDXLIV]+""")))
         return -1
-    while (romstr.isNotEmpty()) {
+    while (cursor < roman.length) {
         for (i in rom.indices) {
-            if (romstr.startsWith(rom[i])) {
+            if (roman.startsWith(rom[i], cursor)) {
                 res += sep[i]
-                romstr = romstr.removePrefix(rom[i])
+                cursor += rom[i].length
                 break
             }
         }
