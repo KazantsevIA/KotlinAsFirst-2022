@@ -226,7 +226,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
         prices.add(i.value)
     }
     var minCost = prices.maxOf { it.second }
-    var cheapestStuff = Pair("", 0.0)
+    var cheapestStuff: Pair<String, Double>? = null
     prices = prices.toMutableList()
     for (pai in prices) {
         if (pai.first == kind && pai.second < minCost) {
@@ -236,8 +236,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     }
     for ((k, v) in stuff)
         if (v == cheapestStuff) {
-            return if (k == "") null
-            else k
+            return k
         }
     return null
 }
