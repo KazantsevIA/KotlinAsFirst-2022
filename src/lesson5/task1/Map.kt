@@ -235,8 +235,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
         }
     }
     for ((k, v) in stuff)
-        if (v == cheapestStuff)
-            return k
+        if (v == cheapestStuff) {
+            return if (k == "") null
+            else k
+        }
     return null
 }
 
@@ -338,13 +340,14 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val numMap = mutableMapOf<Int, Pair<Int, Int>>()
-    for (i in list.indices)
-        numMap += Pair(number - list[i], Pair(list[i], i))
-    for ((key, value) in numMap) {
-        if (numMap[value.first]?.first == key && value.second != numMap[value.first]!!.second)
-            return Pair(value.second, numMap[value.first]!!.second)
+    val numMap = mutableMapOf<Int, Int>()
+    for (i in list.indices) {
+        if (number - list[i] in numMap.keys)
+            return Pair(numMap[number - list[i]]!!, i)
+        else
+            numMap += Pair(list[i], i)
     }
+
     return Pair(-1, -1)
 }
 
