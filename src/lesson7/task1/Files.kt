@@ -2,7 +2,6 @@
 
 package lesson7.task1
 
-import ru.spbstu.wheels.stack
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -308,8 +307,26 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+fun markdownToHtmlSigns(line: String): String {
+    val htmlSigns = mapOf("**" to "b", "*" to "i", "~~" to "s")
+    var eLine = line
+    var wasSign = false
+    for ((mdSign) in htmlSigns){
+        while (mdSign in eLine) {
+            if (!wasSign) {
+                eLine = eLine.replaceFirst(mdSign, "<${htmlSigns[mdSign]}>")
+                wasSign = true
+            } else {
+                eLine = eLine.replaceFirst(mdSign, "</${htmlSigns[mdSign]}>")
+                wasSign = false
+            }
+        }
+    }
+    return eLine
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val signs = mutableMapOf("*" to false, "**" to false, "~~" to false)
+
     val writer = File(outputName).bufferedWriter()
     var flag = false
     var addp = false
@@ -328,33 +345,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 addp = false
             }
         }
-        while ("**" in eLine) {
-            if (signs["**"] == false) {
-                eLine = eLine.replaceFirst("**", "<b>")
-                signs["**"] = true
-            } else {
-                eLine = eLine.replaceFirst("**", "</b>")
-                signs["**"] = false
-            }
-        }
-        while ("*" in eLine) {
-            if (signs["*"] == false) {
-                eLine = eLine.replaceFirst("*", "<i>")
-                signs["*"] = true
-            } else {
-                eLine = eLine.replaceFirst("*", "</i>")
-                signs["*"] = false
-            }
-        }
-        while ("~~" in eLine) {
-            if (signs["~~"] == false) {
-                eLine = eLine.replaceFirst("~~", "<s>")
-                signs["~~"] = true
-            } else {
-                eLine = eLine.replaceFirst("~~", "</s>")
-                signs["~~"] = false
-            }
-        }
+        while ("**" in eLine || "*" in eLine || "~~" in eLine)
+            eLine = markdownToHtmlSigns(eLine)
         writer.write(eLine)
         writer.newLine()
     }
@@ -465,11 +457,9 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
     var spacesPrevious = Int.MIN_VALUE
     writer.write("<html>\n<body>\n<p>\n")
     for (line in File(inputName).readLines()) {
-        var spacesNow = 0
         var editableLine = line
-        var i = 0
         editableLine = editableLine.trimStart()
-        spacesNow = line.length - editableLine.length
+        val spacesNow = line.length - editableLine.length
         if (editableLine.startsWith("*") && spacesPrevious < spacesNow) {
             writer.write("<ul>")
             listStack.add("ul")
