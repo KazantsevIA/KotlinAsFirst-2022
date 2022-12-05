@@ -94,7 +94,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) < radius
+    fun contains(p: Point): Boolean = center.distance(p) <= radius
 }
 
 /**
@@ -135,8 +135,8 @@ fun diameter(vararg points: Point): Segment {
  */
 fun circleByDiameter(diameter: Segment): Circle =
     Circle(
-        Point((diameter.end.x + diameter.begin.x) / 2, (diameter.end.y + diameter.begin.y) / 2),
-        diameter.length() / 2
+        Point((diameter.end.x + diameter.begin.x) / 2.0, (diameter.end.y + diameter.begin.y) / 2.0),
+        diameter.length() / 2.0
     )
 
 /**
@@ -253,11 +253,14 @@ fun minContainingCircle(vararg points: Point): Circle {
         throw IllegalAccessException()
     if (points.size == 1)
         return Circle(points[0], 0.0)
-    var maxDistance = diameter(*points)
-    var circle = circleByDiameter(maxDistance)
+    var diameter = diameter(*points)
+    var circle = circleByDiameter(diameter)
+    var maxDistance = circle.center
     for (point in points)
-        if (!circle.contains(point))
-            circle = circleByThreePoints(maxDistance.begin, maxDistance.end, point)
+        if (circle.center.distance(point) > circle.center.distance(maxDistance))
+            maxDistance = point
+    if (!circle.contains(maxDistance))
+        circle = circleByThreePoints(diameter.begin, diameter.end, maxDistance)
     return circle
 }
 
