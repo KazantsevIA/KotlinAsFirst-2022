@@ -88,12 +88,12 @@ fun transDate(str: String, to: Boolean): String {
 fun dateStrToDigit(str: String): String {
     if (!str.matches(Regex("""\d+\s[а-я]+\s\d+""")))
         return ""
-    val date =
-        str.replace(Regex("""[а-я]"""), "0").split(" ").map { it.toInt() }.toMutableList()
-    date[1] = transDate(str.filter { it.isLetter() }, true).toInt()
-    if (daysInMonth(date[1], date[2]) < date[0]) return ""
-    if (date[1] == 0) return ""
-    return String.format("%02d.%02d.%d", date[0], date[1], date[2])
+    val day = str.split(" ")[0].toInt()
+    val month = transDate(str.split(" ")[1], true).toInt()
+    val year = str.split(" ")[2].toInt()
+    if (daysInMonth(month, year) < day) return ""
+    if (month == 0) return ""
+    return String.format("%02d.%02d.%d", day, month, year)
 }
 
 /**

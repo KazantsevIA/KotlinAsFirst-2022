@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.abs
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -149,12 +151,8 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяющихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val res = mutableSetOf<String>()
-    for (names in a)
-        if (names in b) res.add(names)
-    return res.toList()
-}
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.toSet().intersect(b.toSet()).toList()
+
 
 /**
  * Средняя (3 балла)
@@ -174,11 +172,11 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    val res: MutableMap<String, String> = mapA.toMutableMap()
-    for ((key, value) in mapB) {
-        //res[key] = (res[key]?.split(", ") + value.split(", ")).toSet().joinToString()
-    }
-    return res
+    val phonesList = mapA.toList().map { Pair(it.first, it.second.split(", ")) } +
+            mapB.toList().map { Pair(it.first, it.second.split(", ")) }
+    val phoneBook =
+        phonesList.groupBy { it.first }.mapValues { it.value.map { it1 -> it1.second }.flatten().toSet().toString() }
+    return phoneBook.mapValues { it.value.removePrefix("[").removeSuffix("]") }
 }
 
 /**
@@ -227,13 +225,18 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     for (i in stuff) {
         prices.add(i.value)
     }
-    prices = prices.sortedBy { it.second }.toMutableList()
+    var minCost = prices.maxOf { it.second }
+    var cheapestStuff = Pair("", 0.0)
+    prices = prices.toMutableList()
     for (pai in prices) {
-        if (pai.first == kind)
-            for ((key, value) in stuff)
-                if (value == pai)
-                    return key
+        if (pai.first == kind && pai.second < minCost) {
+            cheapestStuff = pai
+            minCost = pai.second
+        }
     }
+    for ((k, v) in stuff)
+        if (v == cheapestStuff)
+            return k
     return null
 }
 
@@ -264,13 +267,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> {
-    val repeats = mutableMapOf<String, Int>()
-    for (i in list.toSet())
-        repeats[i] = list.count { it == i }
+fun extractRepeats(list: List<String>): Map<String, Int> = list.groupingBy { it }.eachCount().filter { it.value > 1 }
 
-    return repeats.filter { it.value > 1 }
-}
 
 /**
  * Средняя (3 балла)
@@ -340,9 +338,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in list) {
-        if (number - i in list.minusElement(i))
-            return Pair(list.indexOf(i), list.indexOf(number - i))
+    val numMap = mutableMapOf<Int, Pair<Int, Int>>()
+    for (i in list.indices)
+        numMap += Pair(number - list[i], Pair(list[i], i))
+    for ((key, value) in numMap) {
+        if (numMap[value.first]?.first == key && value.second != numMap[value.first]!!.second)
+            return Pair(value.second, numMap[value.first]!!.second)
     }
     return Pair(-1, -1)
 }
@@ -369,3 +370,23 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+
+/**
+ * Простая (2 балла)
+ *
+ * По заданному ассоциативному массиву "студент"-"оценка за экзамен" построить
+ * обратный массив "оценка за экзамен"-"список студентов с этой оценкой".
+ *
+ * Например:
+ *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
+ *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
+ */
+fun buildGrades2(grades: Map<String, Int>): Map<Int, List<String>> {
+    val res = mutableMapOf<Int, MutableList<String>>()
+    for ((key, value) in grades) {
+        if (value !in res.keys)
+            res[value] = mutableListOf()
+        res[value]?.add(key)
+    }
+    return res
+}
