@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import ru.spbstu.wheels.stack
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -459,10 +460,49 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    val listStack = mutableListOf<String>() // * ul; 1 ol
+    val writer = File(outputName).bufferedWriter()
+    var spacesPrevious = Int.MIN_VALUE
+    writer.write("<html>\n<body>\n<p>\n")
+    for (line in File(inputName).readLines()) {
+        var spacesNow = 0
+        var editableLine = line
+        var i = 0
+        editableLine = editableLine.trimStart()
+        spacesNow = line.length - editableLine.length
+        if (editableLine.startsWith("*") && spacesPrevious < spacesNow) {
+            writer.write("<ul>")
+            listStack.add("ul")
+        }
+        if (editableLine.matches(Regex("""^[0-9]+.+""")) && spacesPrevious < spacesNow) {
+            writer.write("<ol>")
+            listStack.add("ol")
+        }
+        if (spacesNow == spacesPrevious)
+            writer.write("</li>")
+        if (spacesNow < spacesPrevious) {
+            writer.write("</li></${listStack.last()}></li>")
+            listStack.removeLast()
+        }
+        if (listStack.last() == "ul") {
+            editableLine = editableLine.removePrefix("*")
+        }
+        if (listStack.last() == "ol") {
+            editableLine = editableLine.substringAfter(".")
+        }
+        writer.write("<li>$editableLine")
+        spacesPrevious = spacesNow
+    }
+    while (listStack.isNotEmpty()) {
+        writer.write("</li></${listStack.last()}>")
+        listStack.removeLast()
+    }
+    writer.write("</p>\n</body>\n</html>")
+    writer.close()
 }
 
-/**
+
+    /**
  * Очень сложная (30 баллов)
  *
  * Реализовать преобразования из двух предыдущих задач одновременно над одним и тем же файлом.
