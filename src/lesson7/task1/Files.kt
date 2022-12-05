@@ -307,26 +307,8 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
-fun markdownToHtmlSigns(line: String): String {
-    val htmlSigns = mapOf("**" to "b", "*" to "i", "~~" to "s")
-    var eLine = line
-    var wasSign = false
-    for ((mdSign) in htmlSigns){
-        while (mdSign in eLine) {
-            if (!wasSign) {
-                eLine = eLine.replaceFirst(mdSign, "<${htmlSigns[mdSign]}>")
-                wasSign = true
-            } else {
-                eLine = eLine.replaceFirst(mdSign, "</${htmlSigns[mdSign]}>")
-                wasSign = false
-            }
-        }
-    }
-    return eLine
-}
-
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-
+    val signs = mutableMapOf("*" to false, "**" to false, "~~" to false)
     val writer = File(outputName).bufferedWriter()
     var flag = false
     var addp = false
@@ -345,8 +327,33 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 addp = false
             }
         }
-        while ("**" in eLine || "*" in eLine || "~~" in eLine)
-            eLine = markdownToHtmlSigns(eLine)
+        while ("**" in eLine) {
+            if (signs["**"] == false) {
+                eLine = eLine.replaceFirst("**", "<b>")
+                signs["**"] = true
+            } else {
+                eLine = eLine.replaceFirst("**", "</b>")
+                signs["**"] = false
+            }
+        }
+        while ("*" in eLine) {
+            if (signs["*"] == false) {
+                eLine = eLine.replaceFirst("*", "<i>")
+                signs["*"] = true
+            } else {
+                eLine = eLine.replaceFirst("*", "</i>")
+                signs["*"] = false
+            }
+        }
+        while ("~~" in eLine) {
+            if (signs["~~"] == false) {
+                eLine = eLine.replaceFirst("~~", "<s>")
+                signs["~~"] = true
+            } else {
+                eLine = eLine.replaceFirst("~~", "</s>")
+                signs["~~"] = false
+            }
+        }
         writer.write(eLine)
         writer.newLine()
     }
