@@ -2,10 +2,10 @@
 
 package lesson8.task1
 
+import kotlinx.html.P
 import lesson1.task1.sqr
-import java.lang.IllegalArgumentException
-
 import kotlin.math.*
+
 
 // Урок 8: простые классы
 // Максимальное количество баллов = 40 (без очень трудных задач = 11)
@@ -119,7 +119,7 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     if (points.size < 2)
         throw IllegalArgumentException()
-    var maxLength = Segment(points[0],points[0])
+    var maxLength = Segment(points[0], points[0])
     for (i in points)
         for (j in points)
             if (Segment(i, j).length() > maxLength.length())
@@ -248,19 +248,38 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = Circle(
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
+
 fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty())
         throw IllegalAccessException()
     if (points.size == 1)
         return Circle(points[0], 0.0)
-    var diameter = diameter(*points)
-    var circle = circleByDiameter(diameter)
-    var maxDistance = circle.center
-    for (point in points)
-        if (circle.center.distance(point) > circle.center.distance(maxDistance))
-            maxDistance = point
-    if (!circle.contains(maxDistance))
-        circle = circleByThreePoints(diameter.begin, diameter.end, maxDistance)
-    return circle
+    val n = points.size
+    var mec = Circle(points[0], Double.MAX_VALUE / 2)
+    var flag = true
+    for (i in 0 until n) {
+        for (j in i + 1 until n) {
+            val tmp = circleByDiameter(Segment(points[i], points[j]))
+            for (point in points) {
+                if (!tmp.contains(point))
+                    flag = false
+            }
+            if (tmp.radius < mec.radius && flag) mec = tmp
+            flag = true
+        }
+    }
+    for (i in 0 until n) {
+        for (j in i + 1 until n) {
+            for (k in j + 1 until n) {
+                val tmp = circleByThreePoints(points[i], points[j], points[k])
+                for (point in points)
+                    if (!tmp.contains(point))
+                        flag = false
+                if (tmp.radius < mec.radius && flag) mec = tmp
+                flag = true
+            }
+        }
+    }
+    return mec
 }
 
