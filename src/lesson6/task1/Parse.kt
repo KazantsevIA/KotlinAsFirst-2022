@@ -88,9 +88,10 @@ fun transDate(str: String, to: Boolean): String {
 fun dateStrToDigit(str: String): String {
     if (!str.matches(Regex("""\d+\s[а-я]+\s\d+""")))
         return ""
-    val day = str.split(" ")[0].toInt()
-    val month = transDate(str.split(" ")[1], true).toInt()
-    val year = str.split(" ")[2].toInt()
+    val strToList = str.split(" ")
+    val day = strToList[0].toInt()
+    val month = transDate(strToList[1], true).toInt()
+    val year = strToList[2].toInt()
     if (daysInMonth(month, year) < day) return ""
     if (month == 0) return ""
     return String.format("%02d.%02d.%d", day, month, year)
@@ -109,7 +110,7 @@ fun dateStrToDigit(str: String): String {
 fun dateDigitToStr(digital: String): String {
     if (!digital.matches(Regex("""\d+\.\d\d.\d+""")))
         return ""
-    val date = digital.split(".").toMutableList().map { it.toInt() }
+    val date = digital.split(".").map { it.toInt() }
     if (daysInMonth(date[1], date[2]) < date[0]) return ""
     return String.format("%d %s %d", date[0], transDate(date[1].toString(), false), date[2])
 }
@@ -199,7 +200,19 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (!("$description; ").matches(Regex("""([А-яA-z]+ [0-9]+([.][0-9]+)?; )+""")))
+        return ""
+    val lst = description.split("; ").map { it.split(" ") }
+    var maxPrice = 0.0
+    var indx = 0
+    for (i in lst.indices)
+        if (lst[i][1].toDouble() > maxPrice) {
+            maxPrice = lst[i][1].toDouble()
+            indx = i
+        }
+    return lst[indx][0]
+}
 
 /**
  * Сложная (6 баллов)

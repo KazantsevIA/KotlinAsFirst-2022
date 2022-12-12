@@ -221,7 +221,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var prices = mutableMapOf<Double, String>()
+    val prices = mutableMapOf<Double, String>()
     for ((key, value) in stuff) {
         if (value.first == kind)
             prices += Pair(value.second, key)

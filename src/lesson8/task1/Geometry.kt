@@ -81,13 +81,11 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double {
-        return if (center.distance(other.center) - (radius + other.radius) > 0.0)
+    fun distance(other: Circle): Double =
+        if (center.distance(other.center) - (radius + other.radius) > 0.0)
             (center.distance(other.center) - (radius + other.radius))
         else
             0.0
-    }
-
 
     /**
      * Тривиальная (1 балл)
@@ -191,10 +189,10 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  */
 fun lineByPoints(a: Point, b: Point): Line {
     var angle = atan2(a.y - b.y, a.x - b.x)
-    if (angle < 0)
-        angle += PI
-    if (angle >= PI)
-        angle -= PI
+    when {
+        angle < 0 -> angle += PI
+        angle >= PI -> angle -= PI
+    }
     return Line(a, angle)
 }
 

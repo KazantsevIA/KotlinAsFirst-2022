@@ -46,6 +46,7 @@ interface Matrix<E> {
  */
 fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> = TODO()
 
+
 /**
  * Средняя сложность (считается двумя задачами в 3 балла каждая)
  *
