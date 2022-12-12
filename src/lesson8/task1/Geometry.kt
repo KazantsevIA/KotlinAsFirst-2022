@@ -189,10 +189,10 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  */
 fun lineByPoints(a: Point, b: Point): Line {
     var angle = atan2(a.y - b.y, a.x - b.x)
-    when {
-        angle < 0 -> angle += PI
-        angle >= PI -> angle -= PI
-    }
+    if (angle < 0)
+        angle += PI
+    if (angle >= PI)
+        angle -= PI
     return Line(a, angle)
 }
 
