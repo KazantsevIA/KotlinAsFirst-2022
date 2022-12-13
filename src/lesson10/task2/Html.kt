@@ -85,7 +85,8 @@ fun generateListHtml(list: List<String>): String {
     sb.myHtml {
         myBody {
             myList {
-                TODO()
+                for (item in list)
+                    myItem { item.unaryPlus() }
             }
         }
     }
@@ -108,18 +109,27 @@ private class HTMLBody(val sb: StringBuilder) {
     }
 
     fun myList(init: HTMLList.() -> Unit): HTMLList {
-        TODO()
+        val ol = HTMLList(sb)
+        sb.append("<ol>")
+        ol.init()
+        sb.append("</ol>")
+        return ol
     }
 }
 
 private class HTMLList(val sb: StringBuilder) {
     fun myItem(init: HTMLItem.() -> Unit): HTMLItem {
-        TODO()
+        val li = HTMLItem(sb)
+        sb.append("<li>")
+        li.init()
+        sb.append("</li>")
+        return li
     }
 }
 
 private class HTMLItem(val sb: StringBuilder) {
     operator fun String.unaryPlus() {
+        sb.append(this)
     }
 }
 
